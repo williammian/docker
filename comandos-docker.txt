@@ -84,6 +84,10 @@ docker-compose up - Sobe todos os containers relacionados ao docker-compose, des
 
 docker-compose down - Para todos os serviços em execução que estejam relacionados ao arquivo docker-compose.yml.
 
+docker-compose ps - Lista os containers sendo executados
+
+docker-compose up -d - Sobe os containers liberando o terminal
+
 -----------------------------------------------------------------------
 
 O Dockerfile define os comandos para executar instalações complexas e com características específicas.
