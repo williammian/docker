@@ -126,3 +126,8 @@ Foi copiado o conteúdo da pasta public, que contém os arquivos estáticos, e um a
 
 -----------------------------------------------------------------------
 
+Efetuar testes
+
+https://labs.play-with-docker.com/
+
+-----------------------------------------------------------------------

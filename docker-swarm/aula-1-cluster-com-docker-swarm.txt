@@ -1,0 +1,62 @@
+Aula 01 - Cluster com Docker Swarm
+
+Instalar: Docker Machine, Virtualbox, Docker (Docker Desktop non Windows)
+
+Ambiente de teste:
+https://labs.play-with-docker.com/
+
+----------------------------------------------------------------------------
+
+O Docker Swarm é um orquestrador
+
+O Docker Swarm apresenta uma série de vantagens em relação ao Docker usado de maneira tradicional.
+
+O Docker Swarm divide os containers entre múltiplas máquinas de um mesmo cluster de maneira automática.
+Através do dispatcher o Docker Swarm define a melhor máquina para executar algum container.
+
+O Docker Swarm consegue resetar containers automaticamente em caso de falhas.
+O Docker Swarm tem capacidade de reiniciar containers a fim de manter a aplicação funcionando.
+
+-----------------------------------------------------------------------------
+
+Docker Machine, por mais que não esteja relacionada diretamente ao Docker Swarm, pode nos ajudar bastante.
+
+Ao utilizar a Docker Machine, podemos criar máquinas virtuais prontas para executar Docker.
+A Docker Machine cria máquinas virtuais bem leves já provisionadas com o Docker.
+
+------------------------------------------------------------------------------
+
+Usando Docker Machine
+
+Abra o Power Shell em modo de administração e execute o comando 
+bcdedit /set hypervisorlaunchtype off.
+Reinicie a máquina e tente criar a máquina virtual com o comando 
+docker-machine create -d virtualbox vm1.
+
+Caso não dê certo a primeira tentativa, tente criar a máquina virtual com o comando 
+docker-machine create -d virtualbox --virtualbox-no-vtx-check vm1.
+
+docker-machine ls
+
+docker-machine start vm1
+
+docker-machine ssh vm1
+
+--------------------------------------------------------------------------------
+
+Criando o cluster
+
+Um cluster é um conjunto de máquinas dividindo poder computacional
+
+docker swarm init --advertise-addr 192.168.99.100
+
+Adicionar worker
+docker swarm join --token SWMTKN-1-2uvgomwjjrvsb3w2vuwcy3beiln0nmeygfk7tto3me5arejnph-cauus85tf5gem2qqiodcckr5l 192.168.99.100:2377
+
+Adicionar manager
+docker swarm join-token manager
+
+---------------------------------------------------------------------------------
+
+docker info
+
