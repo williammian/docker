@@ -1,0 +1,78 @@
+Responsabilidade dos nós workers
+
+Nós workers são responsáveis por executar containers.
+
+Entrar via ssh em cada nó (vm2 e vm3)
+
+Adicionar worker
+docker swarm join --token SWMTKN-1-2uvgomwjjrvsb3w2vuwcy3beiln0nmeygfk7tto3me5arejnph-cauus85tf5gem2qqiodcckr5l 192.168.99.100:2377
+
+docker swarm join-token worker (para recuperar o token para adicionar workers)
+
+-------------------------------------------------
+
+Uma responsabilidade dos nós workers dentro do swarm:
+São responsáveis pela execução dos containers dentro do swarm.
+Como o nome diz, eles são os trabalhadores, responsáveis por rodar containers.
+
+--------------------------------------------------
+
+Listando nós
+(estando dentro da manager / vm1)
+docker node ls
+
+---------------------------------------------------
+
+Removendo nós
+(estando dentro da manager / vm1)
+
+deve desativar (colocar como down) o nó antes de removê-lo
+
+docker swarm leave
+
+docker node rm "id do nó"
+
+--------------------------------------------------
+
+Para executarmos comandos de leitura, como por exemplo docker node ls, e/ou alteração no estado do swarm, temos uma condição.
+Podem ser executados apenas em nós managers.
+Tais comandos ficam restritos apenas aos nós managers dentro do swarm.
+
+--------------------------------------------------
+
+Inspecionar um nó
+
+docker node inspect vm2
+
+-------------------------------------------------
+
+Subindo um serviço
+(estando dentro da manager / vm1)
+
+docker service create -p 8080:3000 aluracursos/barbearia
+
+---------------------------------------------------
+
+docker service vs docker run
+
+O comando docker service create no final cria um container em escopo do swarm e o docker container run em escopo local.
+
+---------------------------------------------------
+
+docker service ls
+
+docker service ps "id"
+
+--------------------------------------------------
+
+Tarefas são instâncias de serviços
+
+Routing Mesh
+Artifício do Docker Swarm permite que nós possamos acessar quaisquer serviços a partir do 
+IP de qualquer nó dentro do swarm, apenas informando a porta.
+Graças ao Routing Mesh conseguimos acessar diferentes serviços a partir de qualquer IP pertencente ao swarm.
+
+----------------------------------------------------
+
+
+
