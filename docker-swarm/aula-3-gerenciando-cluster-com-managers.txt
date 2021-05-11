@@ -1,0 +1,110 @@
+Gerenciando o cluster com managers
+
+--------------------------------------------
+
+Desastres no Swarm
+
+Caso nosso único manager pare de funcionar, podemos ter problemas.
+
+As tarefas em execução em outros nós serão mantidas sem problemas.
+A ausência do manager não afetará as tarefas de outros nós.
+
+Não conseguiremos mais executar comandos de leitura e/ou criar novos serviços.
+Com a ausência do manager, não teremos mais nós capazes de executar comandos administrativos.
+
+--------------------------------------------
+
+Como fazer backup do Swarm
+
+Copiar logs
+
+Nesta pasta fica todo conteúdo gerenciado pelo swarm
+/var/lib/docker/swarm
+
+Acessá-la com
+
+sudo su
+
+cd /var/lib/docker/swarm
+
+cp -r /var/lib/docker/swarm backup
+
+cp -r backup/* /var/lib/docker/swarm
+
+docker swarm init --force-new-cluster --advertise-addr 192.168.99.100
+
+-------------------------------------------------
+
+É muito importante fazermos backup de todo o nosso swarm para evitarmos desastres.
+Por padrão, o diretório em que fica armazenado o conteúdo do nosso swarm é
+
+/var/lib/docker/swarm
+
+Nesse diretório temos todas as configurações de estado do nosso swarm.
+
+--------------------------------------------------
+
+Criando mais managers
+
+Na vm 1
+docker swarm join-token manager
+
+Nas vms 2 e 3
+docker swarm join --token SWMTKN-1-5g4eb93c6rn2odhm3gaqr7lmvifcp6gmqhf31a97kanhj9wq6p-4ilk33wd79udue38sowonzff9 192.168.99.100:2377
+
+docker node ls --format "{{.Hostname}} {{.ManagerStatus}}"
+resultado:
+vm1 Leader
+vm2 Reachable
+vm3 Reachable
+
+Criando workers
+
+Na vm 1 2 ou 3
+docker swarm join-token worker
+
+Nas vms 4 e 5
+docker swarm join --token SWMTKN-1-5g4eb93c6rn2odhm3gaqr7lmvifcp6gmqhf31a97kanhj9wq6p-ds51veipih2bfn4oba0tfgoqx 192.168.99.102:2377
+
+docker node ls --format "{{.Hostname}} {{.ManagerStatus}}"
+resultado:
+vm1 Leader
+vm2 Reachable
+vm3 Reachable
+vm4
+vm5
+
+Ao utilizarmos o comando docker node ls, como podemos identificar quais nós são managers dentro do nosso swarm?
+Basta olhar a coluna Manager Status e ver quais nós tem o valor Reachable ou Leader.
+Nós com esses status são managers dentro do nosso swarm.
+
+--------------------------------------------------------------
+
+Algoritmo de consenso RAFT
+
+Recomendado 3, 5 ou 7 managers
+
+Regras
+
+Suporta (N - 1) / 2 falhas
+
+Deve ter no mínimo
+(N / 2) + 1 de quórum
+
+N = número de managers
+
+Ex:
+Em caso de falhas do Leader do swarm, temos uma eleição entre os nós managers para definir o novo líder.
+Se tivéssemos um swarm com 7 nós managers, qual seria o nosso 
+quórum necessário e número máximo de falhas para realização da eleição?
+
+4 para o quórum e 3 falhas no máximo.
+
+Como nosso quórum é (N / 2) + 1 e o número máximo de falhas é (N - 1) / 2, temos o valor esperado.
+
+------------------------------------------------------------------
+
+
+
+
+

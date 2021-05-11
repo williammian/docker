@@ -1,0 +1,47 @@
+Serviços globais e replicados
+
+Serviços replicados
+
+docker service update --replicas 4 2jh
+
+Serviços replicados rodam em um ou mais nós do swarm.
+Basta definirmos para o serviço ter apenas uma réplica.
+
+Serviços por padrão são criados no modo replicado.
+Quando não informamos o modo desejado, criamos serviços replicados por padrão.
+
+--------------------------------------------------------------
+
+Vamos supor que temos um serviço com id ci10k3u7q6ti.
+Como podemos escalar esse serviço para ter 5 réplicas?
+
+Aprendemos uma das possibilidades de alterar o número de réplicas de um serviço utilizando o comando 
+docker service update --replicas 5 ci10k3u7q6ti
+mas esse não é o único meio!
+
+Para isso também temos o comando docker service scale. Utilizando o id, podemos atualizar com o comando:
+
+docker service scale ci10k3u7q6ti=5
+
+Nesse caso, definimos 5 réplicas para o serviço. Os dois comandos produzem o mesmo resultado, 
+o segundo é apenas uma forma resumida do primeiro comando.
+
+---------------------------------------------------------------
+
+Serviços globais
+
+docker service create -p 8080:3000 --mode global aluracursos/barbearia
+
+Serviços globais rodam em todos os nós do swarm.
+
+Definir o modo que o serviço será criado utilizando a flag --mode no momento da criação do serviço.
+
+---------------------------------------------------------------
+
+Por que global?
+
+Bons exemplos de serviços globais são serviços de monitoramento e segurança.
+Serviços que são críticos à aplicação como um todo podem e devem ser executados como globais
+para que todos os nós possam ser devidamente monitorados e estejam seguros.
+
+-----------------------------------------------------------------
