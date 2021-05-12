@@ -1,0 +1,84 @@
+Driver Overlay
+
+docker network ls
+
+docker node inspect vm1 --pretty
+
+A rede ingress além de ser a rede padrão criada pelo Docker Swarm
+para os nós que fazem parte cluster, ela utiliza o driver overlay.
+
+O driver overlay comunica seus dados de maneira criptografada para garantir nossa segurança.
+Executando o comando docker node inspect podemos ver os certificados de segurança.
+
+O driver overlay permite a comunicação entre diferentes hosts de um mesmo cluster.
+Além de garantir a segurança, o driver overlay também permite a comunicação entre diferentes hosts rodando Docker.
+
+------------------------------------------------------------------
+
+Service Discovery
+("descobrir serviço pelo nome")
+
+docker service create --name servico --replicas 2 alpine sleep 1d
+
+docker service ls 
+
+docker service ps 63
+
+docker container ls
+
+docker exec -it servico.1.nqxntvpoee0wqqinjioc0cvqf sh
+
+ping servico.2.m1psrpcs0fxjcbcdqwf55zdw4
+
+--------------------------------------------------------------------
+
+A rede ingress, utilizando o driver overlay, consegue fazer diversas coisas por nós, como garantir por exemplo, 
+a comunicação entre diferentes nós de maneira altamente segura. Porém, ela também possui certas limitações.
+Uma delas é: Serviços conseguem se comunicar apenas via endereço IP.
+Temos que saber o endereço IP do serviço que queremos nos comunicar utilizando a rede ingress.
+
+--------------------------------------------------------------------
+
+User-Defined Overlay
+
+docker network create -d overlay my_overlay
+
+docker network ls
+
+docker service create --name servico --network my_overlay --replicas 2 alpine sleep 1d
+
+docker service ps 83
+
+docker exec -it servico.2.vcn3ttmlpoaokovijkd6twetz sh
+
+ping servico.1.6srk0itg6075fvv8305p9sd95
+
+--------------------------------------------------------------------
+
+Redes customizadas
+
+User-Defined Overlay são criadas de maneira lazy para workers.
+Essas redes só serão reconhecidas por workers que rodarem tarefas que utilizem a rede.
+
+Serviços que utilizam redes customizadas conseguem descobrir outros serviços diretamente por nome.
+Podemos utilizar o conceito de Service Discovery com User-Defined Overlay.
+
+-------------------------------------------------------------------
+
+Por mais que o driver overlay seja responsável por comunicar múltiplos hosts em uma mesma rede, 
+também podemos conectar containers em escopo local criados com o comando docker container run em redes criadas com esse driver.
+
+Para isso, basta no momento da criação da rede utilizarmos a flag --attachable:
+
+docker network create -d overlay --attachable my_overlay
+
+Com o comando acima, conseguiremos conectar tanto serviços como containers "standalone" em nossa rede my_overlay.
+
+-------------------------------------------------------------------
+
+
+
+
+
+
+
