@@ -1,0 +1,72 @@
+Deploy com Docker Stack
+
+Exemplo:
+Um projeto que usa Docker Swarm.
+No arquivo de configuração (docker-compose.yml) tem o seguinte trecho:
+
+deploy:
+      mode: replicated
+      replicas: 4
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
+        
+Podemos afirmar sobre o trecho:
+Garantirá que teremos exatamente 4 réplicas desse serviço.
+Em caso de falhas o serviço será reiniciado.
+
+-------------------------------------------------------------------
+
+Criar arquivo a partir de comando linux
+
+cat > nomedoarquivo.extensao
+
+colar conteúdo dentro dele
+
+-------------------------------------------------------------------
+
+docker stack deploy --compose-file docker-compose.yml vote
+
+docker stack ls
+
+docker service ls
+
+docker service ls --format "{{.Name}} {{.Replicas}}"
+
+-------------------------------------------------------------------
+
+Remover toda stack
+
+docker stack rm vote
+
+vote é o nome da stack
+
+--------------------------------------------------------------------
+
+Finalidade do comando docker stack deploy
+
+Utilizar um arquivo de composição e subir uma pilha de serviços simultaneamente.
+
+Podemos inclusive utilizar as instruções do docker-compose.
+
+--------------------------------------------------------------------
+
+Por padrão, tanto o Docker no modo standalone quanto o Docker Swarm, partilham apenas de um driver local para uso de volumes. 
+Isso quer dizer que o Docker Swarm não possui, até então, solução nativa para distribuir volumes entre os nós.
+
+No exemplo, ao definirmos o volume para cada serviço, criamos um volume local dentro de cada nó que for executar a tarefa. 
+Logo, os volumes não são compartilhados entre os diferentes nós do cluster.
+
+Existem soluções que não são nativas do Docker Swarm para utilizar volumes distribuídos entre nós, 
+que podem ser consultadas na Docker Store.
+
+----------------------------------------------------------------------
+
+O docker-compose.yml também pode ser utilizado para serviços de um swarm
+Novas instruções a partir da versão 3, como deploy e suas instruções internas
+Uma stack é uma pilha de serviços trabalhando em conjunto
+
+----------------------------------------------------------------------
+
+
